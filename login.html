@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      background: linear-gradient(to right, #8e2de2, #4a00e0);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-container {
+      display: flex;
+      width: 700px;
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+
+    /* LEFT SIDE */
+    .login-left {
+      width: 50%;
+      background: linear-gradient(to bottom, #8e2de2, #4a00e0);
+      color: white;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .login-left h2 {
+      margin-bottom: 10px;
+    }
+
+    .login-left p {
+      opacity: 0.8;
+    }
+
+    /* RIGHT SIDE */
+    .login-right {
+      width: 50%;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .login-right h2 {
+      margin-bottom: 20px;
+    }
+
+    .login-right input {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      transition: 0.2s;
+    }
+
+    .login-right input:focus {
+      outline: none;
+      border-color: #8e2de2;
+      box-shadow: 0 0 5px #8e2de2;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #8e2de2;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: 0.2s;
+    }
+
+    .login-btn:hover {
+      background: #6c1cd6;
+    }
+
+    .login-btn:active {
+      transform: scale(0.95);
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+  <!-- LEFT PANEL -->
+  <div class="login-left">
+    <h2>Welcome Back!</h2>
+    <p>Access your academic dashboard, track assignments, and stay updated.</p>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="login-right">
+    <h2>Login</h2>
+
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+
+    <button class="login-btn" onclick="login()">Login</button>
+
+    <p id="error" class="error"></p>
+  </div>
+
+</div>
+
+<script>
+async function login() {
+
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+
+  try {
+    const response = await fetch("http://localhost:3000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      localStorage.setItem("user", data.user);
+      window.location.href = "index.html";
+    } else {
+      document.getElementById("error").innerText = "Invalid credentials";
+    }
+
+  } catch (error) {
+    document.getElementById("error").innerText = "Server not running";
+  }
+}
+</script>
+
+</body>
+</html>
